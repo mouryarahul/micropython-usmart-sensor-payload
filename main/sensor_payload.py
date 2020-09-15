@@ -36,34 +36,41 @@
 
 def get_sensor_payload_instance():
     """Get instance of the SensorPayload for this module.
-	Override this function in derived modules."""
-	return SensorPayload()
+    Override this function in derived modules."""
+    return SensorPayload()
 
 
 class SensorPayload:
     """SensorPayload standard class."""
-	
-    def get_est_acquisition_duration() -> float:
+
+    def __init__(self):
+        """Initialise."""
+        pass
+
+    def __call__(self):
+        return self
+
+    def get_est_acquisition_duration(self) -> float:
         """Get estimated acquisition duration in seconds."""
-		return 0.0
-	
-    def start_acquisition():
+        return 0.0
+
+    def start_acquisition(self):
         """Start an acquisition. Returns True if started successfully."""
         return True
 
-    def process_acquisition():
+    def process_acquisition(self):
         """Continue processing the acquisition. To be called periodically within the mainloop. 
-		This is where the state machine keeps track on progress. """
-		return None
+        This is where the state machine keeps track on progress. """
+        return None
 
-    def is_completed():
+    def is_completed(self):
         """Is acquisition completed flag."""
         return True
 
-    def get_latest_data() -> bytes:
+    def get_latest_data(self) -> bytes:
         """Get the latest data as a bytes."""
         return None
 
-	
+
 
 
