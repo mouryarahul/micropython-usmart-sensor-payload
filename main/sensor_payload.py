@@ -60,12 +60,13 @@ class SensorPayload:
         """Is acquisition completed flag."""
         return True
 
-    def get_latest_data(self) -> bytes:
+    def get_latest_data_as_bytes(self) -> bytes:
         """Get the latest data as a bytes."""
+        # Format to be determined
         return None
 
-    def get_latest_data_json(self) -> str:
-        """Get the latest data as a json string."""
+    def get_latest_data_as_json(self):
+        """Get the latest data as a json object. Which can then be loaded into json.dump/dumps."""
         return None
 
 
@@ -214,17 +215,25 @@ class PebSensorPayload(SensorPayload):
         """Is acquisition completed flag."""
         return (not self._bme280_awaiting_valid_measurements) and (not self._lsm303agr_awaiting_valid_measurements)
 
-    def get_latest_data(self) -> bytes:
+    def get_latest_data_as_bytes(self) -> bytes:
         """Get the latest data as a bytes."""
         # Format to be determined
-
         return None
 
-    def get_latest_data_json(self) -> str:
-        """Get the latest data as a json string."""
-        
+    def get_latest_data_as_json(self):
+        """Get the latest data as a json object. Which can then be loaded into json.dump/dumps."""
+        jason = {"bme280": {"temperature": self._bme280_temperature,
+                            "pressure": self._bme280_pressure,
+                            "humidity": self._bme280_humidity},
+                 "lsm303agr": {"accelerometer": {"x": self._lsm303agr_accel[0],
+                                                 "y": self._lsm303agr_accel[1],
+                                                 "z": self._lsm303agr_accel[2]},
+                               "magnetometer": {"x": self._lsm303agr_magneto[0],
+                                                "y": self._lsm303agr_magneto[1],
+                                                "z": self._lsm303agr_magneto[2]},
+                               "temperature": self._lsm303agr_temperature}}
 
-        return None
+        return jason
 
 
 def get_sensor_payload_instance() -> SensorPayload:
