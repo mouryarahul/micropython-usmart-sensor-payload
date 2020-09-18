@@ -123,6 +123,9 @@ class PebSensorPayload(SensorPayload):
         i2c = pyb.I2C(1)  # pyb.I2C
         i2c.init(pyb.I2C.MASTER, baudrate=400000)  # pyb.I2C
 
+        # delay
+        pyb.delay(10)
+
         self._bme280 = BME280(i2c)
         self._lsm303agr = LSM303AGR(i2c)
 
@@ -137,6 +140,9 @@ class PebSensorPayload(SensorPayload):
         self._bme280.set_config_reg(filter=bme280.FILTER_COEF_OFF, t_sb=bme280.STANDBY_T_1000_MS)
 
         self._bme280_awaiting_valid_measurements = True
+
+        # delay
+        pyb.delay(10)
 
         # Clear measurements
         self._lsm303agr_temperature = None
