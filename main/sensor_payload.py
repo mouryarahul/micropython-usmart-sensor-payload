@@ -77,6 +77,8 @@ import pybd_expansion.main.lsm303agr as lsm303agr
 from pybd_expansion.main.lsm303agr import LSM303AGR
 import pyb
 
+import struct
+
 
 
 class PebSensorPayload(SensorPayload):
@@ -223,8 +225,19 @@ class PebSensorPayload(SensorPayload):
 
     def get_latest_data_as_bytes(self) -> bytes:
         """Get the latest data as a bytes."""
-        # Format to be determined
-        return None
+        # Format as packed floats
+        # https://docs.python.org/3/library/struct.html
+        packed_bytes = struct.pack("ffffffffff", self._bme280_temperature, self._bme280_pressure, self._bme280_humidity,
+                                   self._lsm303agr_accel[0], self._lsm303agr_accel[1], self._lsm303agr_accel[2],
+                                   self._lsm303agr_magneto[0], self._lsm303agr_magneto[1], self._lsm303agr_magneto[2],
+                                   self._lsm303agr_temperature)
+        # To unpack
+        #bme280_temperature, bme280_pressure, bme280_humidity, \
+        #lsm303agr_accel_x, lsm303agr_accel_y, lsm303agr_accel_z, \
+        #lsm303agr_magneto_x, lsm303agr_magneto_y, lsm303agr_magneto_z, \
+        #lsm303agr_temperature = struct.unpack("ffffffffff", packed_bytes)
+
+        return packed_bytes
 
     def get_latest_data_as_json(self):
         """Get the latest data as a json object. Which can then be loaded into json.dump/dumps."""
